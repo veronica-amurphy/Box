@@ -440,7 +440,17 @@ html,body{height:100%;background:#0D0A04;display:flex;justify-content:center;ali
 #sv .ip-text{font-family:'Playfair Display',serif;font-size:14px;font-style:italic;color:rgba(232,200,140,0.84);line-height:1.6;}
 #sv .ip-text.placeholder{color:rgba(200,160,90,0.3);}
 #sv .ip-edit{font-family:'DM Sans',sans-serif;font-size:7px;letter-spacing:1.6px;text-transform:uppercase;color:rgba(200,160,90,0.45);margin-top:9px;cursor:pointer;display:inline-block;}
-#sv .ip-actions{display:flex;gap:12px;flex-wrap:wrap;}
+#sv .ip-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;}
+#sv .ip-action-btn{min-height:38px;padding:10px 11px;border-radius:10px;border:0.5px solid rgba(232,169,74,0.2);background:rgba(232,169,74,0.05);font-family:'DM Sans',sans-serif;font-size:8px;letter-spacing:1.6px;text-transform:uppercase;color:rgba(200,160,90,0.68);cursor:pointer;}
+#sv .ip-action-btn.primary{background:rgba(232,169,74,0.14);border-color:rgba(232,169,74,0.32);color:rgba(232,190,110,0.92);}
+#sv .voice-intention-picker{margin-top:12px;border:0.5px solid rgba(232,169,74,0.1);border-radius:14px;overflow:hidden;}
+#sv .voice-intention-picker.collapsed{display:none;}
+#sv .voice-intention-row{display:flex;align-items:center;gap:10px;padding:11px 12px;background:rgba(232,169,74,0.025);cursor:pointer;}
+#sv .voice-intention-row + .voice-intention-row{border-top:0.5px solid rgba(232,169,74,0.07);}
+#sv .voice-intention-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;border:0.5px solid rgba(232,169,74,0.25);background:transparent;}
+#sv .voice-intention-row.on .voice-intention-dot{background:rgba(200,146,58,0.4);border-color:rgba(200,146,58,0.7);box-shadow:0 0 0 3px rgba(200,146,58,0.1);}
+#sv .voice-intention-preview{flex:1;font-family:'Playfair Display',serif;font-size:13px;font-style:italic;color:rgba(232,200,140,0.75);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+#sv .voice-intention-badge{font-family:'DM Sans',sans-serif;font-size:6.5px;letter-spacing:1px;text-transform:uppercase;color:rgba(200,160,90,0.38);flex-shrink:0;}
 #sv .sound-wrap{padding:0 18px 12px;flex-shrink:0;}
 #sv .sound-label,#sv .affirm-label,#sv .saved-label{font-family:'DM Sans',sans-serif;font-size:7px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(200,160,90,0.38);margin-bottom:8px;}
 #sv .sound-row{display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px;}
@@ -855,9 +865,10 @@ html,body{height:100%;background:#0D0A04;display:flex;justify-content:center;ali
       <div class="ip-label">Active intention</div>
       <div class="ip-text" id="voice-active-intention">Choose an intention from Journey or place one in the Reiki Box.</div>
       <div class="ip-actions">
-        <div class="ip-edit" onclick="goTo('sj')">View Journey &#x2192;</div>
-        <div class="ip-edit" onclick="goTo('sb')">Place Intention &#x2192;</div>
+        <button class="ip-action-btn primary" onclick="toggleVoiceIntentionPicker()">Change Intention</button>
+        <button class="ip-action-btn" onclick="goTo('sb')">Place New Intention</button>
       </div>
+      <div class="voice-intention-picker collapsed" id="voice-intention-picker"></div>
     </div>
 
     <div class="sound-wrap">
@@ -987,10 +998,15 @@ var STORAGE_BACKUP_KEY = 'reiki-box-state-backup';
 var STORAGE_SESSION_KEY = 'reiki-box-state-session';
 var WELCOME_SEEN_KEY = 'reiki-box-welcome-seen';
 var VOICE_SESSIONS_KEY = 'reiki-voice-sessions';
+var REIKI_DB_NAME = 'reiki-box-db';
+var REIKI_DB_VERSION = 1;
+var REIKI_STORE = 'records';
 var journeyDetailOpen = false;
 var detailIntentionId = '';
 var journeyStateCache = null;
 var journeyStorageFailed = false;
+var voiceSessionsCache = null;
+var reikiDbPromise = null;
 var JOURNEY_STAGES = [
   { key: 'seed', label: 'Seed', icon: '&#x25CC;' },
   { key: 'shift', label: 'Shift', icon: '&#x2726;' },
@@ -998,6 +1014,92 @@ var JOURNEY_STAGES = [
   { key: 'bloom', label: 'Bloom', icon: '&#x273F;' },
   { key: 'harvest', label: 'Harvest', icon: '&#x25C9;' }
 ];
+
+function openReikiDb() {
+  if (!window.indexedDB) return Promise.reject(new Error('IndexedDB unavailable'));
+  if (reikiDbPromise) return reikiDbPromise;
+  reikiDbPromise = new Promise(function(resolve, reject) {
+    var request = indexedDB.open(REIKI_DB_NAME, REIKI_DB_VERSION);
+    request.onupgradeneeded = function(event) {
+      var db = event.target.result;
+      if (!db.objectStoreNames.contains(REIKI_STORE)) db.createObjectStore(REIKI_STORE);
+    };
+    request.onsuccess = function(event) { resolve(event.target.result); };
+    request.onerror = function() { reject(request.error || new Error('IndexedDB open failed')); };
+  });
+  return reikiDbPromise;
+}
+
+function readDbValue(key) {
+  return openReikiDb().then(function(db) {
+    return new Promise(function(resolve, reject) {
+      var tx = db.transaction(REIKI_STORE, 'readonly');
+      var store = tx.objectStore(REIKI_STORE);
+      var request = store.get(key);
+      request.onsuccess = function() { resolve(request.result || null); };
+      request.onerror = function() { reject(request.error || new Error('IndexedDB read failed')); };
+    });
+  });
+}
+
+function writeDbValue(key, value) {
+  return openReikiDb().then(function(db) {
+    return new Promise(function(resolve, reject) {
+      var tx = db.transaction(REIKI_STORE, 'readwrite');
+      var store = tx.objectStore(REIKI_STORE);
+      var request = store.put(value, key);
+      request.onsuccess = function() { resolve(true); };
+      request.onerror = function() { reject(request.error || new Error('IndexedDB write failed')); };
+    });
+  });
+}
+
+function stripAudioFromSessions(list) {
+  return (Array.isArray(list) ? list : []).map(function(session) {
+    var copy = {};
+    Object.keys(session || {}).forEach(function(key) {
+      if (key !== 'audioDataUrl') copy[key] = session[key];
+    });
+    if (session && session.audioDataUrl) copy.audioStoredInDb = true;
+    return copy;
+  });
+}
+
+function refreshStoredViews() {
+  updateJourneyTracker();
+  renderIntentionDetail();
+  updateVoiceScreen();
+  renderSessionsScreen();
+}
+
+function hydratePersistentStorage() {
+  readDbValue(STORAGE_KEY).then(function(dbState) {
+    if (dbState) {
+      journeyStateCache = normalizeJourneyState(dbState);
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(journeyStateCache));
+        localStorage.setItem(STORAGE_BACKUP_KEY, JSON.stringify(journeyStateCache));
+      } catch (err) {}
+      refreshStoredViews();
+    } else {
+      writeDbValue(STORAGE_KEY, getSavedState()).catch(function() {});
+    }
+  }).catch(function() {});
+
+  readDbValue(VOICE_SESSIONS_KEY).then(function(dbSessions) {
+    if (Array.isArray(dbSessions)) {
+      voiceSessionsCache = dbSessions;
+      try {
+        localStorage.setItem(VOICE_SESSIONS_KEY, JSON.stringify(stripAudioFromSessions(dbSessions)));
+      } catch (err) {}
+      renderVoiceSessions();
+      renderSessionsScreen();
+      renderIntentionDetail();
+    } else {
+      writeDbValue(VOICE_SESSIONS_KEY, getVoiceSessions()).catch(function() {});
+    }
+  }).catch(function() {});
+}
 
 function getSavedState() {
   if (journeyStorageFailed && journeyStateCache) return normalizeJourneyState(journeyStateCache);
@@ -1033,6 +1135,9 @@ function saveState(next) {
   var normalized = normalizeJourneyState(next || {});
   journeyStateCache = normalized;
   var payload = JSON.stringify(normalized);
+  writeDbValue(STORAGE_KEY, normalized).catch(function() {
+    journeyStorageFailed = true;
+  });
 
   try {
     localStorage.setItem(STORAGE_KEY, payload);
@@ -1054,21 +1159,31 @@ function saveState(next) {
 }
 
 function getVoiceSessions() {
+  if (voiceSessionsCache) return voiceSessionsCache;
   try {
     var raw = localStorage.getItem(VOICE_SESSIONS_KEY);
-    return raw ? JSON.parse(raw) : [];
+    voiceSessionsCache = raw ? JSON.parse(raw) : [];
+    return voiceSessionsCache;
   } catch (err) {
+    voiceSessionsCache = [];
     return [];
   }
 }
 
 function saveVoiceSessions(list) {
+  voiceSessionsCache = Array.isArray(list) ? list : [];
+  writeDbValue(VOICE_SESSIONS_KEY, voiceSessionsCache).catch(function() {
+    if (voiceSessionsCache.some(function(session) { return !!session.audioDataUrl; })) {
+      showToast('Audio may not persist in this browser');
+    }
+  });
+
   try {
-    localStorage.setItem(VOICE_SESSIONS_KEY, JSON.stringify(list));
+    localStorage.setItem(VOICE_SESSIONS_KEY, JSON.stringify(stripAudioFromSessions(voiceSessionsCache)));
     return true;
   } catch (err) {
-    showToast('Audio is too large to save here');
-    return false;
+    showToast('Session saved to browser database');
+    return true;
   }
 }
 
@@ -1574,6 +1689,28 @@ function recordVoiceForDetailIntention() {
   goTo('sv');
 }
 
+function chooseVoiceIntention(id) {
+  if (recording || hasRecording) {
+    showToast('Save or discard this recording first');
+    return;
+  }
+  setActiveIntention(id);
+  var picker = document.getElementById('voice-intention-picker');
+  if (picker) picker.classList.add('collapsed');
+  updateVoiceScreen();
+  showToast('Voice intention selected');
+}
+
+function toggleVoiceIntentionPicker() {
+  var picker = document.getElementById('voice-intention-picker');
+  if (!picker) return;
+  if (recording || hasRecording) {
+    showToast('Save or discard this recording first');
+    return;
+  }
+  picker.classList.toggle('collapsed');
+}
+
 function focusDetailNote() {
   var input = document.getElementById('detail-note-input');
   if (input) {
@@ -1995,6 +2132,8 @@ var mediaStream = null;
 var audioChunks = [];
 var recordedAudioDataUrl = '';
 var recordedAudioMime = '';
+var audioPreparing = false;
+var pendingOpenSave = false;
 var voiceAudioPlayer = null;
 var selectedSessionId = '';
 
@@ -2004,6 +2143,7 @@ function updateVoiceScreen() {
   var activeEl = document.getElementById('voice-active-intention');
   var affirmEl = document.getElementById('voice-affirmation-text');
   var suggestionWrap = document.getElementById('affirm-suggestions');
+  renderVoiceIntentionPicker(state, active);
   if (activeEl) {
     if (active && active.text) {
       activeEl.textContent = active.text;
@@ -2031,6 +2171,37 @@ function updateVoiceScreen() {
   renderVoiceSessions();
 }
 
+function renderVoiceIntentionPicker(state, active) {
+  var picker = document.getElementById('voice-intention-picker');
+  if (!picker) return;
+  picker.innerHTML = '';
+  var available = (state.intentions || []).filter(function(item) { return !item.integrated; });
+  if (!available.length) return;
+
+  available.slice().reverse().forEach(function(item) {
+    var stage = getStageByKey(item.stage) || JOURNEY_STAGES[0];
+    var row = document.createElement('div');
+    row.className = 'voice-intention-row' + (active && active.id === item.id ? ' on' : '');
+
+    var dot = document.createElement('div');
+    dot.className = 'voice-intention-dot';
+
+    var preview = document.createElement('div');
+    preview.className = 'voice-intention-preview';
+    preview.textContent = item.text;
+
+    var badge = document.createElement('div');
+    badge.className = 'voice-intention-badge';
+    badge.textContent = stage.label;
+
+    row.appendChild(dot);
+    row.appendChild(preview);
+    row.appendChild(badge);
+    row.onclick = function() { chooseVoiceIntention(item.id); };
+    picker.appendChild(row);
+  });
+}
+
 function blobToDataUrl(blob) {
   return new Promise(function(resolve, reject) {
     var reader = new FileReader();
@@ -2046,9 +2217,39 @@ function stopMediaStream() {
   mediaStream = null;
 }
 
+function getSupportedAudioMimeType() {
+  if (typeof MediaRecorder === 'undefined' || !MediaRecorder.isTypeSupported) return '';
+  var types = [
+    'audio/mp4',
+    'audio/webm;codecs=opus',
+    'audio/webm',
+    'audio/ogg;codecs=opus'
+  ];
+  for (var i = 0; i < types.length; i++) {
+    if (MediaRecorder.isTypeSupported(types[i])) return types[i];
+  }
+  return '';
+}
+
+function setRecordingPrepared() {
+  audioPreparing = false;
+  if (recSecs > 0) {
+    hasRecording = true;
+    document.getElementById('waveArea').classList.add('visible');
+    document.getElementById('recActions').classList.add('visible');
+  }
+  document.getElementById('recLabel').textContent = 'tap to record';
+  if (pendingOpenSave && recordedAudioDataUrl) {
+    pendingOpenSave = false;
+    document.getElementById('saveModal').classList.add('open');
+  }
+}
+
 async function startAudioCapture() {
   recordedAudioDataUrl = '';
   recordedAudioMime = '';
+  audioPreparing = false;
+  pendingOpenSave = false;
   audioChunks = [];
 
   if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || typeof MediaRecorder === 'undefined') {
@@ -2058,12 +2259,14 @@ async function startAudioCapture() {
 
   try {
     mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    mediaRecorder = new MediaRecorder(mediaStream);
+    var mimeType = getSupportedAudioMimeType();
+    mediaRecorder = mimeType ? new MediaRecorder(mediaStream, { mimeType: mimeType }) : new MediaRecorder(mediaStream);
     recordedAudioMime = mediaRecorder.mimeType || 'audio/webm';
     mediaRecorder.ondataavailable = function(event) {
       if (event.data && event.data.size > 0) audioChunks.push(event.data);
     };
     mediaRecorder.onstop = async function() {
+      audioPreparing = true;
       try {
         var blob = new Blob(audioChunks, { type: recordedAudioMime || 'audio/webm' });
         recordedAudioDataUrl = await blobToDataUrl(blob);
@@ -2072,11 +2275,7 @@ async function startAudioCapture() {
         showToast('Audio could not be prepared');
       }
       stopMediaStream();
-      if (recSecs > 0) {
-        hasRecording = true;
-        document.getElementById('waveArea').classList.add('visible');
-        document.getElementById('recActions').classList.add('visible');
-      }
+      setRecordingPrepared();
     };
     mediaRecorder.start();
     return true;
@@ -2098,6 +2297,7 @@ function finishRecordingCapture() {
     hasRecording = true;
     document.getElementById('waveArea').classList.add('visible');
     document.getElementById('recActions').classList.add('visible');
+    document.getElementById('recLabel').textContent = 'tap to record';
   }
 }
 
@@ -2142,7 +2342,7 @@ async function toggleRec() {
   } else {
     btn.classList.remove('recording');
     lbl.classList.remove('recording');
-    lbl.textContent = 'tap to record';
+    lbl.textContent = 'preparing';
     clearInterval(recTimer);
     time.textContent = '';
     finishRecordingCapture();
@@ -2163,6 +2363,8 @@ function discardRec() {
   audioChunks = [];
   recordedAudioDataUrl = '';
   recordedAudioMime = '';
+  audioPreparing = false;
+  pendingOpenSave = false;
   document.getElementById('recBtn').classList.remove('recording');
   document.getElementById('recLabel').classList.remove('recording');
   document.getElementById('recLabel').textContent = 'tap to record';
@@ -2173,7 +2375,13 @@ function discardRec() {
 
 function openSave() {
   if (!hasRecording) return;
+  if (audioPreparing) {
+    pendingOpenSave = true;
+    showToast('Preparing audio. Save will open in a moment.');
+    return;
+  }
   if (!recordedAudioDataUrl) {
+    pendingOpenSave = true;
     showToast('Preparing audio. Try Save again in a moment.');
     return;
   }
@@ -2400,6 +2608,7 @@ setInterval(function() {
 
 updateJourneyTracker();
 openStartingScreen();
+hydratePersistentStorage();
 </script>
 </body>
 </html>
