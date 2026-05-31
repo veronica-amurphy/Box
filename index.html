@@ -492,9 +492,9 @@ html,body{height:100%;background:#030E14;display:flex;justify-content:center;ali
 #sv .br1{width:206px;height:206px;}
 #sv .br2{width:156px;height:156px;border-color:rgba(46,170,160,0.14);}
 #sv .br3{width:108px;height:108px;border-color:rgba(46,170,160,0.18);}
-#sv .rec-btn{width:84px;height:84px;border-radius:50%;background:rgba(46,170,160,0.06);border:1px solid rgba(46,170,160,0.28);display:flex;align-items:center;justify-content:center;cursor:pointer;position:absolute;top:50%;left:50%;z-index:3;transition:all 0.35s;transform:translate(-50%,-50%);}
+#sv .rec-btn{width:84px;height:84px;border-radius:50%;background:rgba(46,170,160,0.06);border:1px solid rgba(46,170,160,0.28);display:flex;align-items:center;justify-content:center;cursor:pointer;position:absolute;top:43%;left:50%;z-index:3;transition:all 0.35s;transform:translate(-50%,-50%);}
 #sv .rec-dot{width:20px;height:20px;border-radius:50%;background:rgba(26,122,116,0.72);transition:all 0.3s;}
-#sv .rec-state{position:absolute;left:0;right:0;bottom:28px;z-index:3;display:flex;flex-direction:column;align-items:center;gap:7px;}
+#sv .rec-state{position:absolute;left:0;right:0;bottom:24px;z-index:3;display:flex;flex-direction:column;align-items:center;gap:7px;}
 #sv .rec-label{font-family:'DM Sans',sans-serif;font-size:9px;letter-spacing:2.4px;text-transform:uppercase;color:rgba(46,170,160,0.82);transition:color 0.3s;}
 #sv .rec-time{font-family:'Playfair Display',serif;font-size:24px;line-height:1;color:rgba(125,219,213,0.82);min-height:28px;transition:opacity 0.3s;}
 #sv .rec-status{max-width:250px;text-align:center;font-family:'DM Sans',sans-serif;font-size:7px;letter-spacing:1.4px;text-transform:uppercase;line-height:1.45;color:rgba(29,154,117,0.5);}
@@ -518,6 +518,7 @@ html,body{height:100%;background:#030E14;display:flex;justify-content:center;ali
 #sv .save-sheet{width:min(375px,100%);max-height:calc(100vh - 64px);overflow-y:auto;background:#030E14;border-radius:22px;border:0.5px solid rgba(46,170,160,0.13);padding:22px 22px 28px;box-shadow:0 28px 80px rgba(0,0,0,0.68);}
 #sv .save-title{font-family:'Playfair Display',serif;font-size:24px;font-weight:500;color:#D8F4F2;letter-spacing:0;margin-bottom:18px;}
 #sv .save-field label{font-family:'DM Sans',sans-serif;font-size:7px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(29,154,117,0.45);display:block;margin-bottom:7px;}
+#sv .save-hint{font-family:'Playfair Display',serif;font-size:12px;font-style:italic;color:rgba(180,235,232,0.52);margin:-2px 0 9px;}
 #sv .save-field input{width:100%;background:rgba(46,170,160,0.04);border:0.5px solid rgba(46,170,160,0.14);border-radius:10px;padding:12px 13px;font-family:'Playfair Display',serif;font-size:14px;font-style:italic;color:#D8F4F2;outline:none;}
 #sv .tchip{padding:7px 12px;border-radius:999px;background:rgba(46,170,160,0.04);border:0.5px solid rgba(46,170,160,0.12);font-family:'DM Sans',sans-serif;font-size:7px;letter-spacing:1.4px;text-transform:uppercase;color:rgba(29,154,117,0.55);cursor:pointer;transition:all 0.2s;}
 #sv .tchip.on{background:rgba(46,170,160,0.13);border-color:rgba(26,122,116,0.55);color:rgba(125,219,213,0.92);}
@@ -577,6 +578,12 @@ html,body{height:100%;background:#030E14;display:flex;justify-content:center;ali
 #ss .session-focus-copy{margin-top:12px;padding-top:12px;border-top:0.5px solid rgba(46,170,160,0.1);font-family:'Playfair Display',serif;font-size:13px;font-style:italic;line-height:1.6;color:rgba(180,235,232,0.72);}
 #ss .session-focus-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;}
 #ss .session-chip{padding:6px 10px;border-radius:999px;border:0.5px solid rgba(46,170,160,0.16);background:rgba(46,170,160,0.05);font-family:'DM Sans',sans-serif;font-size:7px;letter-spacing:1.4px;text-transform:uppercase;color:rgba(29,154,117,0.62);}
+#ss .session-player{margin-top:14px;padding:12px;border-radius:14px;border:0.5px solid rgba(46,170,160,0.12);background:rgba(46,170,160,0.035);display:flex;align-items:center;gap:12px;}
+#ss .session-player.hidden{display:none;}
+#ss .session-player-btn{width:54px;min-height:34px;border-radius:999px;border:0.5px solid rgba(46,170,160,0.24);background:rgba(46,170,160,0.12);font-family:'DM Sans',sans-serif;font-size:7px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(125,219,213,0.92);cursor:pointer;flex-shrink:0;}
+#ss .session-player-main{flex:1;min-width:0;}
+#ss .session-player-range{width:100%;accent-color:#7DDBD5;}
+#ss .session-player-time{display:flex;justify-content:space-between;margin-top:4px;font-family:'DM Sans',sans-serif;font-size:7px;letter-spacing:1.2px;color:rgba(29,154,117,0.52);}
 #ss .session-move-btn{margin-top:12px;padding:8px 11px;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:7px;letter-spacing:1.6px;text-transform:uppercase;border:0.5px solid rgba(46,170,160,0.18);background:rgba(46,170,160,0.05);color:rgba(29,154,117,0.65);cursor:pointer;}
 #ss .session-move-btn:disabled{opacity:0.32;cursor:not-allowed;}
 #ss .session-move-picker{margin-top:10px;border:0.5px solid rgba(46,170,160,0.1);border-radius:14px;overflow:hidden;}
@@ -913,6 +920,7 @@ html,body{height:100%;background:#030E14;display:flex;justify-content:center;ali
         <div class="save-title">Save this session</div>
         <div class="save-field">
           <label>How does this serve you?</label>
+          <div class="save-hint">Choose one or more</div>
           <div class="tag-chips">
             <div class="tchip" onclick="selTag(this)">Grounding</div>
             <div class="tchip" onclick="selTag(this)">Confidence</div>
@@ -956,6 +964,13 @@ html,body{height:100%;background:#030E14;display:flex;justify-content:center;ali
         <div class="session-focus-meta" id="session-focus-meta">Save a session in Voice to see it here.</div>
         <div class="session-focus-copy" id="session-focus-copy">Once you record and save a session, this area can hold the feeling of it, the frequency you chose, and the intention it came from.</div>
         <div class="session-focus-row" id="session-focus-row"></div>
+        <div class="session-player hidden" id="session-player">
+          <button class="session-player-btn" id="session-player-toggle" onclick="toggleSelectedSessionPlayback()">Play</button>
+          <div class="session-player-main">
+            <input class="session-player-range" id="session-player-range" type="range" min="0" max="100" value="0" step="0.1" oninput="seekSelectedSession(this.value)">
+            <div class="session-player-time"><span id="session-player-current">0:00</span><span id="session-player-duration">0:00</span></div>
+          </div>
+        </div>
         <button class="session-move-btn" id="session-move-button" onclick="toggleSessionMovePicker()">Move Intention</button>
         <div class="session-move-picker hidden" id="session-move-picker"></div>
       </div>
@@ -2215,6 +2230,7 @@ var recordedAudioMime = '';
 var audioPreparing = false;
 var pendingOpenSave = false;
 var voiceAudioPlayer = null;
+var playbackSessionId = '';
 var selectedSessionId = '';
 var speechToTextRecognition = null;
 var speechToTextButtonId = '';
@@ -2571,19 +2587,23 @@ function getSessionDateTitle(date) {
 }
 
 function saveSession() {
-  var tag = '';
+  var tags = [];
   var sound = '';
   var musicTrack = selectedMusicTrack || '';
   var affirmationText = document.getElementById('voice-affirmation-text').value.trim();
   var customTagEl = document.getElementById('customSupportTag');
   var customTag = customTagEl ? customTagEl.value.trim() : '';
-  document.querySelectorAll('.tchip.on').forEach(function(t) { tag = t.textContent; });
+  document.querySelectorAll('.tchip.on').forEach(function(t) {
+    var value = t.textContent;
+    if (value === 'Other') value = customTag || 'Personal Support';
+    tags.push(value);
+  });
   var activeSound = document.querySelector('#sv .schip.on');
   if (activeSound) sound = activeSound.textContent;
   var state = getSavedState();
   var activeIntention = getActiveIntention(state);
-  if (tag === 'Other') tag = customTag || 'Personal Support';
-  if (!tag) tag = 'Grounding';
+  if (!tags.length) tags.push('Grounding');
+  var tag = tags.join(' · ');
   if (!sound) sound = 'Alpha · Calm + Open';
   if (!musicTrack) musicTrack = (MUSIC_TRACKS[getActiveFrequencyKey()] || MUSIC_TRACKS.alpha)[0];
 
@@ -2595,6 +2615,7 @@ function saveSession() {
     id: String(Date.now()),
     name: getSessionDateTitle(now),
     tag: tag,
+    tags: tags,
     sound: sound,
     musicTrack: musicTrack,
     duration: dur,
@@ -2667,18 +2688,103 @@ function playVoiceSession(id) {
     showToast('No audio saved for this session');
     return;
   }
-  if (!voiceAudioPlayer) voiceAudioPlayer = new Audio();
-  if (voiceAudioPlayer.src === session.audioDataUrl && !voiceAudioPlayer.paused) {
-    voiceAudioPlayer.pause();
-    showToast('Playback paused');
+  selectedSessionId = session.id;
+  toggleSelectedSessionPlayback();
+}
+
+function ensureVoiceAudioPlayer() {
+  if (voiceAudioPlayer) return voiceAudioPlayer;
+  voiceAudioPlayer = new Audio();
+  voiceAudioPlayer.ontimeupdate = updateSessionPlayerProgress;
+  voiceAudioPlayer.onloadedmetadata = updateSessionPlayerProgress;
+  voiceAudioPlayer.onended = function() {
+    updateSessionPlayerProgress();
+    updateSessionPlayerButton(false);
+  };
+  return voiceAudioPlayer;
+}
+
+function formatPlaybackTime(seconds) {
+  if (!isFinite(seconds) || seconds < 0) seconds = 0;
+  var total = Math.floor(seconds);
+  var mins = Math.floor(total / 60);
+  var secs = total % 60;
+  return mins + ':' + String(secs).padStart(2, '0');
+}
+
+function updateSessionPlayerButton(isPlaying) {
+  var btn = document.getElementById('session-player-toggle');
+  var bottomBtn = document.getElementById('session-play-button');
+  if (btn) btn.textContent = isPlaying ? 'Pause' : 'Play';
+  if (bottomBtn && selectedSessionTab === 'voice') bottomBtn.textContent = isPlaying ? 'Pause' : 'Play Session';
+}
+
+function updateSessionPlayerProgress() {
+  var player = ensureVoiceAudioPlayer();
+  var range = document.getElementById('session-player-range');
+  var currentEl = document.getElementById('session-player-current');
+  var durationEl = document.getElementById('session-player-duration');
+  var duration = isFinite(player.duration) ? player.duration : 0;
+  if (range) {
+    range.max = duration || 100;
+    range.value = duration ? player.currentTime : 0;
+  }
+  if (currentEl) currentEl.textContent = formatPlaybackTime(player.currentTime);
+  if (durationEl) durationEl.textContent = formatPlaybackTime(duration);
+}
+
+function renderSessionPlayer(session) {
+  var wrap = document.getElementById('session-player');
+  if (!wrap) return;
+  if (selectedSessionTab !== 'voice' || !session || !session.audioDataUrl) {
+    if (voiceAudioPlayer && !voiceAudioPlayer.paused) voiceAudioPlayer.pause();
+    wrap.classList.add('hidden');
+    updateSessionPlayerButton(false);
     return;
   }
-  voiceAudioPlayer.src = session.audioDataUrl;
-  voiceAudioPlayer.play().then(function() {
-    showToast('Playing ' + session.name);
+  wrap.classList.remove('hidden');
+  var player = ensureVoiceAudioPlayer();
+  if (playbackSessionId !== session.id) {
+    if (!player.paused) player.pause();
+    playbackSessionId = session.id;
+    player.src = session.audioDataUrl;
+    player.currentTime = 0;
+    updateSessionPlayerButton(false);
+  }
+  updateSessionPlayerProgress();
+}
+
+function toggleSelectedSessionPlayback() {
+  if (selectedSessionTab !== 'voice') {
+    showToast('Audio previews will be added later');
+    return;
+  }
+  var session = getVoiceSessions().find(function(item) { return item.id === selectedSessionId; }) || getVoiceSessions()[0];
+  if (!session || !session.audioDataUrl) {
+    showToast('No audio saved for this session');
+    return;
+  }
+  selectedSessionId = session.id;
+  renderSessionPlayer(session);
+  var player = ensureVoiceAudioPlayer();
+  if (!player.paused) {
+    player.pause();
+    updateSessionPlayerButton(false);
+    return;
+  }
+  player.play().then(function() {
+    updateSessionPlayerButton(true);
   }).catch(function() {
+    updateSessionPlayerButton(false);
     showToast('Playback could not start');
   });
+}
+
+function seekSelectedSession(value) {
+  var player = ensureVoiceAudioPlayer();
+  if (!isFinite(player.duration)) return;
+  player.currentTime = Number(value) || 0;
+  updateSessionPlayerProgress();
 }
 
 function getSessionLibrary() {
@@ -2817,13 +2923,14 @@ function renderSessionsScreen(selectedId) {
       playButtonEl.disabled = true;
       playButtonEl.textContent = selectedSessionTab === 'music' ? 'Preview Later' : 'Play Session';
     }
+    renderSessionPlayer(null);
     if (moveButtonEl) moveButtonEl.disabled = true;
     if (movePickerEl) movePickerEl.classList.add('hidden');
     return;
   }
 
   if (playButtonEl) {
-    playButtonEl.disabled = selectedSessionTab === 'guided';
+    playButtonEl.disabled = selectedSessionTab === 'guided' || (selectedSessionTab === 'voice' && !selected.audioDataUrl);
     playButtonEl.textContent = selectedSessionTab === 'music' ? 'Preview Later' : 'Play Session';
   }
   if (moveButtonEl) {
@@ -2841,6 +2948,7 @@ function renderSessionsScreen(selectedId) {
     chip.textContent = value;
     rowEl.appendChild(chip);
   });
+  renderSessionPlayer(selected);
   if (selectedSessionTab === 'voice') renderSessionMovePicker(selected);
   if (movePickerEl) movePickerEl.classList.add('hidden');
 
@@ -2860,16 +2968,7 @@ function renderSessionsScreen(selectedId) {
 }
 
 function playSelectedSession() {
-  if (selectedSessionTab !== 'voice') {
-    showToast('Audio previews will be added later');
-    return;
-  }
-  var sessions = getVoiceSessions();
-  if (!sessions.length) {
-    showToast('Save a session in Voice first');
-    return;
-  }
-  playVoiceSession(selectedSessionId || sessions[0].id);
+  toggleSelectedSessionPlayback();
 }
 
 function selSound(el) {
@@ -2881,14 +2980,14 @@ function selSound(el) {
 }
 
 function selTag(el) {
-  document.querySelectorAll('.tchip').forEach(function(t) { t.classList.remove('on'); });
-  el.classList.add('on');
+  el.classList.toggle('on');
   var customTagEl = document.getElementById('customSupportTag');
   if (!customTagEl) return;
-  var isOther = el.textContent === 'Other';
-  customTagEl.classList.toggle('hidden', !isOther);
-  if (isOther) customTagEl.focus();
-  if (!isOther) customTagEl.value = '';
+  var otherChip = Array.prototype.find.call(document.querySelectorAll('.tchip'), function(t) { return t.textContent === 'Other'; });
+  var isOtherOn = otherChip && otherChip.classList.contains('on');
+  customTagEl.classList.toggle('hidden', !isOtherOn);
+  if (isOtherOn && el.textContent === 'Other') customTagEl.focus();
+  if (!isOtherOn) customTagEl.value = '';
 }
 
 var hr = new Date().getHours();
