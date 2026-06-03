@@ -984,7 +984,7 @@ html,body{height:100%;background:#030E14;display:flex;justify-content:center;ali
             <div class="session-player-time"><span id="session-player-current">0:00</span><span id="session-player-duration">0:00</span></div>
           </div>
         </div>
-        <button class="session-move-btn" id="session-move-button" onclick="toggleSessionMovePicker()">Move Intention</button>
+        <button class="session-move-btn" id="session-move-button" onclick="toggleSessionMovePicker()">Change Linked Journey</button>
         <div class="session-move-picker hidden" id="session-move-picker"></div>
       </div>
       <div class="session-list-wrap">
@@ -1823,21 +1823,28 @@ function toggleSpeechToText(inputId, buttonId, listeningMessage) {
 
   speechToTextRecognition = new SpeechRecognition();
   speechToTextButtonId = buttonId;
+  speechToTextBaseValue = input.value.trim();
   speechToTextRecognition.continuous = false;
-  speechToTextRecognition.interimResults = false;
+  speechToTextRecognition.interimResults = true;
   speechToTextRecognition.lang = 'en-US';
   speechToTextRecognition.onstart = function() {
     if (mic) mic.classList.add('listening');
-    showToast(listeningMessage || 'Listening');
+    showToast((listeningMessage || 'Listening') + '... words will appear as you speak');
   };
   speechToTextRecognition.onresult = function(event) {
-    var transcript = '';
-    for (var i = event.resultIndex; i < event.results.length; i++) {
-      transcript += event.results[i][0].transcript;
+    var finalTranscript = '';
+    var interimTranscript = '';
+    for (var i = 0; i < event.results.length; i++) {
+      var phrase = event.results[i][0].transcript;
+      if (event.results[i].isFinal) {
+        finalTranscript += phrase + ' ';
+      } else {
+        interimTranscript += phrase;
+      }
     }
-    transcript = transcript.trim();
+    var transcript = (finalTranscript + interimTranscript).trim();
     if (transcript) {
-      input.value = (input.value ? input.value.trim() + ' ' : '') + transcript;
+      input.value = (speechToTextBaseValue ? speechToTextBaseValue + ' ' : '') + transcript;
       input.focus();
       if (inputId === 'vision-input') onVisionType();
     }
@@ -1849,6 +1856,7 @@ function toggleSpeechToText(inputId, buttonId, listeningMessage) {
     if (mic) mic.classList.remove('listening');
     speechToTextRecognition = null;
     speechToTextButtonId = '';
+    speechToTextBaseValue = '';
   };
   speechToTextRecognition.start();
 }
@@ -2319,6 +2327,7 @@ var playbackSessionId = '';
 var selectedSessionId = '';
 var speechToTextRecognition = null;
 var speechToTextButtonId = '';
+var speechToTextBaseValue = '';
 
 function updateVoiceScreen() {
   var state = getSavedState();
@@ -2944,7 +2953,7 @@ function renderSessionMovePicker(selected) {
 
     var status = document.createElement('div');
     status.className = 'session-move-status';
-    status.textContent = intention.integrated ? 'Integrated' : 'Move';
+    status.textContent = isLinked ? 'Linked' : 'Link';
 
     row.appendChild(dot);
     row.appendChild(text);
