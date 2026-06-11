@@ -110,7 +110,7 @@ html,body{height:100%;background:#030E14;display:flex;justify-content:center;ali
 
 /* BOX SIMPLIFIED */
 #sb{background:#030E14;color:#D8F4F2;font-family:'DM Sans',sans-serif;}
-#sb .si{padding:0 0 118px!important;min-height:100%;position:relative;z-index:5;}
+#sb .si{padding:0 0 118px!important;min-height:100%;position:relative;z-index:1;}
 #sb .sbar{display:flex;justify-content:space-between;padding:8px 24px 0;font-size:11px;color:rgba(46,170,160,0.3)!important;font-family:'DM Sans',sans-serif;}
 #sb .bxh{background:transparent;padding:16px 20px 14px;position:relative;overflow:visible;z-index:5;}
 #sb .bxhg{display:none;}
@@ -156,7 +156,7 @@ html,body{height:100%;background:#030E14;display:flex;justify-content:center;ali
 #sb .schips{display:flex;gap:7px;flex-wrap:wrap;}
 #sb .sc{padding:7px 12px;border-radius:999px;background:rgba(46,170,160,0.04);border:0.5px solid rgba(46,170,160,0.12);font-family:'DM Sans',sans-serif;font-size:7px;letter-spacing:1.3px;text-transform:uppercase;color:rgba(29,154,117,0.52);cursor:pointer;transition:all 0.25s;}
 #sb .sc.on{background:rgba(46,170,160,0.12);border-color:rgba(26,122,116,0.5);color:rgba(125,219,213,0.9);}
-#sb .bnav{background:rgba(4,4,6,0.97)!important;border-top:0.5px solid rgba(46,170,160,0.08)!important;}
+#sb .bnav{background:rgba(4,4,6,0.97)!important;border-top:0.5px solid rgba(46,170,160,0.08)!important;z-index:120;pointer-events:auto;}
 
 /* JOURNEY */
 #sj{background:radial-gradient(circle at 22% 0%,rgba(46,170,160,0.18),transparent 34%),radial-gradient(circle at 90% 18%,rgba(26,122,116,0.12),transparent 30%),linear-gradient(180deg,#030E14 0%,#030E14 100%);color:#D8F4F2;}
@@ -257,6 +257,7 @@ html,body{height:100%;background:#030E14;display:flex;justify-content:center;ali
 #sj .jeyebrow{font-family:'DM Sans',sans-serif;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(29,154,117,0.45);margin-bottom:5px;}
 #sj .jtit{font-family:'Playfair Display',serif;font-size:32px;font-weight:500;color:#D8F4F2;line-height:1.05;}
 #sj .jtit span{display:block;font-style:italic;color:#7DDBD5;}
+#sj .jorient,#sd .detail-orient{margin-top:10px;font-family:'Playfair Display',serif;font-size:13px;font-style:italic;line-height:1.5;color:rgba(180,235,232,0.62);max-width:290px;}
 #sj .jplus{width:32px;height:32px;border-radius:50%;border:1px solid rgba(46,170,160,0.22);background:rgba(46,170,160,0.06);display:flex;align-items:center;justify-content:center;font-size:18px;color:rgba(46,170,160,0.6);cursor:pointer;flex-shrink:0;margin-top:4px;box-shadow:none;}
 #sj .jstats{display:flex;margin:0 18px 16px;gap:1px;border-radius:12px;overflow:hidden;background:transparent;border:none;padding:0;box-shadow:none;}
 #sj .jstat{flex:1;padding:10px 6px;background:rgba(46,170,160,0.05);text-align:center;border-radius:0;}
@@ -586,12 +587,16 @@ html,body{height:100%;background:#030E14;display:flex;justify-content:center;ali
 #ss .session-focus-copy{margin-top:12px;padding-top:12px;border-top:0.5px solid rgba(46,170,160,0.1);font-family:'Playfair Display',serif;font-size:13px;font-style:italic;line-height:1.6;color:rgba(180,235,232,0.72);}
 #ss .session-focus-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;}
 #ss .session-chip{padding:6px 10px;border-radius:999px;border:0.5px solid rgba(46,170,160,0.16);background:rgba(46,170,160,0.05);font-family:'DM Sans',sans-serif;font-size:7px;letter-spacing:1.4px;text-transform:uppercase;color:rgba(29,154,117,0.62);}
-#ss .session-player{margin-top:14px;padding:12px;border-radius:14px;border:0.5px solid rgba(46,170,160,0.12);background:rgba(46,170,160,0.035);display:flex;align-items:center;gap:12px;}
+#ss .session-player{margin-top:14px;padding:13px;border-radius:14px;border:0.5px solid rgba(46,170,160,0.12);background:rgba(46,170,160,0.035);display:flex;flex-direction:column;align-items:stretch;gap:11px;}
 #ss .session-player.hidden{display:none;}
-#ss .session-player-btn{width:54px;min-height:34px;border-radius:999px;border:0.5px solid rgba(46,170,160,0.24);background:rgba(46,170,160,0.12);font-family:'DM Sans',sans-serif;font-size:7px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(125,219,213,0.92);cursor:pointer;flex-shrink:0;}
-#ss .session-player-main{flex:1;min-width:0;}
+#ss .session-player-btn{width:100%;min-height:36px;border-radius:999px;border:0.5px solid rgba(46,170,160,0.24);background:rgba(46,170,160,0.12);font-family:'DM Sans',sans-serif;font-size:8px;letter-spacing:1.7px;text-transform:uppercase;color:rgba(125,219,213,0.92);cursor:pointer;flex-shrink:0;}
+#ss .session-player-main{width:100%;min-width:0;}
 #ss .session-player-range{width:100%;accent-color:#7DDBD5;}
 #ss .session-player-time{display:flex;justify-content:space-between;margin-top:4px;font-family:'DM Sans',sans-serif;font-size:7px;letter-spacing:1.2px;color:rgba(29,154,117,0.52);}
+#ss .session-speed-row{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:12px;padding-top:10px;border-top:0.5px solid rgba(46,170,160,0.1);}
+#ss .session-speed-label{grid-column:1 / -1;font-family:'DM Sans',sans-serif;font-size:8px;letter-spacing:1.8px;text-transform:uppercase;color:rgba(125,219,213,0.62);}
+#ss .session-speed-btn{min-height:34px;padding:8px 9px;border-radius:999px;border:0.5px solid rgba(46,170,160,0.16);background:rgba(46,170,160,0.04);font-family:'DM Sans',sans-serif;font-size:8px;letter-spacing:1.2px;text-transform:uppercase;color:rgba(29,154,117,0.62);cursor:pointer;}
+#ss .session-speed-btn.on{background:rgba(46,170,160,0.13);border-color:rgba(26,122,116,0.48);color:rgba(125,219,213,0.92);}
 #ss .session-move-btn{margin-top:12px;padding:8px 11px;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:7px;letter-spacing:1.6px;text-transform:uppercase;border:0.5px solid rgba(46,170,160,0.18);background:rgba(46,170,160,0.05);color:rgba(29,154,117,0.65);cursor:pointer;}
 #ss .session-move-btn:disabled{opacity:0.32;cursor:not-allowed;}
 #ss .session-move-picker{margin-top:10px;border:0.5px solid rgba(46,170,160,0.1);border-radius:14px;overflow:hidden;}
@@ -771,6 +776,7 @@ html,body{height:100%;background:#030E14;display:flex;justify-content:center;ali
         <div>
           <div class="jeyebrow">&#x2736; Your Journey</div>
           <div class="jtit">Intention<span>Journey</span></div>
+          <div class="jorient">Your intentions collect here. Tap one to open its unfolding.</div>
         </div>
         <div class="jplus" onclick="goTo('sb')">+</div>
       </div>
@@ -811,6 +817,7 @@ html,body{height:100%;background:#030E14;display:flex;justify-content:center;ali
       <button class="detail-back" onclick="goTo('sj')">&#x2190; Back to Journey</button>
       <div class="detail-eyebrow">&#x2736; Intention</div>
       <div class="detail-title">The<span>Unfolding</span></div>
+      <div class="detail-orient">Track this intention through stage, notes, and voice sessions.</div>
     </div>
 
     <div class="detail-card">
@@ -982,6 +989,12 @@ html,body{height:100%;background:#030E14;display:flex;justify-content:center;ali
           <div class="session-player-main">
             <input class="session-player-range" id="session-player-range" type="range" min="0" max="100" value="0" step="0.1" oninput="seekSelectedSession(this.value)">
             <div class="session-player-time"><span id="session-player-current">0:00</span><span id="session-player-duration">0:00</span></div>
+            <div class="session-speed-row" id="session-speed-row">
+              <span class="session-speed-label">Speed</span>
+              <button class="session-speed-btn on" data-speed="1" onclick="setSessionPlaybackSpeed(1)">1x</button>
+              <button class="session-speed-btn" data-speed="1.5" onclick="setSessionPlaybackSpeed(1.5)">1.5x</button>
+              <button class="session-speed-btn" data-speed="2" onclick="setSessionPlaybackSpeed(2)">2x</button>
+            </div>
           </div>
         </div>
         <button class="session-move-btn" id="session-move-button" onclick="toggleSessionMovePicker()">Change Linked Journey</button>
@@ -2324,6 +2337,7 @@ var audioPreparing = false;
 var pendingOpenSave = false;
 var voiceAudioPlayer = null;
 var playbackSessionId = '';
+var sessionPlaybackRate = 1;
 var selectedSessionId = '';
 var speechToTextRecognition = null;
 var speechToTextButtonId = '';
@@ -2790,6 +2804,7 @@ function playVoiceSession(id) {
 function ensureVoiceAudioPlayer() {
   if (voiceAudioPlayer) return voiceAudioPlayer;
   voiceAudioPlayer = new Audio();
+  voiceAudioPlayer.playbackRate = sessionPlaybackRate;
   voiceAudioPlayer.ontimeupdate = updateSessionPlayerProgress;
   voiceAudioPlayer.onloadedmetadata = updateSessionPlayerProgress;
   voiceAudioPlayer.onended = function() {
@@ -2797,6 +2812,19 @@ function ensureVoiceAudioPlayer() {
     updateSessionPlayerButton(false);
   };
   return voiceAudioPlayer;
+}
+
+function updateSessionSpeedButtons() {
+  document.querySelectorAll('#ss .session-speed-btn').forEach(function(btn) {
+    btn.classList.toggle('on', Number(btn.getAttribute('data-speed')) === sessionPlaybackRate);
+  });
+}
+
+function setSessionPlaybackSpeed(rate) {
+  sessionPlaybackRate = rate || 1;
+  var player = ensureVoiceAudioPlayer();
+  player.playbackRate = sessionPlaybackRate;
+  updateSessionSpeedButtons();
 }
 
 function formatPlaybackTime(seconds) {
@@ -2839,6 +2867,7 @@ function renderSessionPlayer(session) {
   }
   wrap.classList.remove('hidden');
   var player = ensureVoiceAudioPlayer();
+  player.playbackRate = sessionPlaybackRate;
   if (playbackSessionId !== session.id) {
     if (!player.paused) player.pause();
     playbackSessionId = session.id;
@@ -2846,6 +2875,7 @@ function renderSessionPlayer(session) {
     player.currentTime = 0;
     updateSessionPlayerButton(false);
   }
+  updateSessionSpeedButtons();
   updateSessionPlayerProgress();
 }
 
