@@ -2881,7 +2881,7 @@ function renderSessionPlayer(session) {
 
 function toggleSelectedSessionPlayback() {
   if (selectedSessionTab !== 'voice') {
-    showToast('Audio previews will be added later');
+    showToast(selectedSessionTab === 'music' ? 'Music files will be added here' : 'Guided meditations will be added here');
     return;
   }
   var session = getVoiceSessions().find(function(item) { return item.id === selectedSessionId; }) || getVoiceSessions()[0];
@@ -3035,18 +3035,18 @@ function renderSessionsScreen(selectedId) {
   if (!nameEl || !metaEl || !copyEl || !rowEl || !listEl) return;
 
   if (!selected) {
-    nameEl.textContent = selectedSessionTab === 'guided' ? 'Guided meditations' : selectedSessionTab === 'music' ? 'No music selected' : 'No sessions yet';
-    metaEl.textContent = selectedSessionTab === 'guided' ? 'Upload or create guided practices later.' : selectedSessionTab === 'music' ? 'Music fields will appear here.' : 'Save a session in Voice to see it here.';
-    copyEl.textContent = selectedSessionTab === 'guided' ? 'Guided meditations can live here when you are ready to add audio files.' : selectedSessionTab === 'music' ? 'Choose a music-only field to sit with support without recording.' : 'Once you record and save a session, this area can hold the feeling of it, the frequency you chose, and the intention it came from.';
+    nameEl.textContent = selectedSessionTab === 'guided' ? 'Guided Meditations' : selectedSessionTab === 'music' ? 'Music Fields' : 'No sessions yet';
+    metaEl.textContent = selectedSessionTab === 'guided' ? 'Guided practices will appear here.' : selectedSessionTab === 'music' ? 'Choose a field to hold the tone of your practice.' : 'Save a session in Voice to see it here.';
+    copyEl.textContent = selectedSessionTab === 'guided' ? 'This space will hold guided meditations when they are added.' : selectedSessionTab === 'music' ? 'Music fields can support a session without recording your voice.' : 'Once you record and save a session, this area can hold the feeling of it, the frequency you chose, and the intention it came from.';
     rowEl.innerHTML = '';
     listEl.innerHTML = '';
     var empty = document.createElement('div');
     empty.className = 'session-empty';
-    empty.textContent = selectedSessionTab === 'guided' ? 'Guided meditations will live here when you are ready to upload them.' : selectedSessionTab === 'music' ? 'Music-only practices will appear here.' : 'Your saved voice sessions will collect here when you are ready.';
+    empty.textContent = selectedSessionTab === 'guided' ? 'Guided meditations will appear here when they are added.' : selectedSessionTab === 'music' ? 'Music fields will appear here when they are added.' : 'Your saved voice sessions will collect here when you are ready.';
     listEl.appendChild(empty);
     if (playButtonEl) {
       playButtonEl.disabled = true;
-      playButtonEl.textContent = selectedSessionTab === 'music' ? 'Preview Later' : 'Play Session';
+      playButtonEl.textContent = selectedSessionTab === 'music' ? 'Select Field' : selectedSessionTab === 'guided' ? 'Open Guided' : 'Play Session';
     }
     renderSessionPlayer(null);
     if (moveButtonEl) moveButtonEl.disabled = true;
@@ -3056,7 +3056,7 @@ function renderSessionsScreen(selectedId) {
 
   if (playButtonEl) {
     playButtonEl.disabled = selectedSessionTab === 'guided' || (selectedSessionTab === 'voice' && !selected.audioDataUrl);
-    playButtonEl.textContent = selectedSessionTab === 'music' ? 'Preview Later' : 'Play Session';
+    playButtonEl.textContent = selectedSessionTab === 'music' ? 'Select Field' : selectedSessionTab === 'guided' ? 'Open Guided' : 'Play Session';
   }
   if (moveButtonEl) {
     moveButtonEl.disabled = selectedSessionTab !== 'voice';
@@ -3073,7 +3073,7 @@ function renderSessionsScreen(selectedId) {
     chip.textContent = value;
     rowEl.appendChild(chip);
   });
-  renderSessionPlayer(selected);
+  renderSessionPlayer(selectedSessionTab === 'voice' ? selected : null);
   if (selectedSessionTab === 'voice') renderSessionMovePicker(selected);
   if (movePickerEl) movePickerEl.classList.add('hidden');
 
